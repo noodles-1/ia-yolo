@@ -1,7 +1,3 @@
-#! /usr/bin/env python
-# coding=utf-8
-
-
 import os
 import cv2
 import random
@@ -47,7 +43,7 @@ class Dataset(object):
 
     def __next__(self):
 
-        with tf.device('/cpu:0'):
+        with tf.device('/device:XLA_GPU:0'):
             self.train_input_size = random.choice(self.train_input_sizes)
             self.train_output_sizes = self.train_input_size // self.strides
 

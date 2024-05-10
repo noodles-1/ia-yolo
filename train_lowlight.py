@@ -1,8 +1,7 @@
-#! /usr/bin/env python
-# coding=utf-8
-
-
 import os
+
+os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+
 import time
 import shutil
 import numpy as np
@@ -130,7 +129,7 @@ class YoloTrain(object):
 
         with tf.name_scope('loader_and_saver'):
             self.loader = tf.train.Saver(self.net_var)
-            self.saver  = tf.train.Saver(tf.global_variables(), max_to_keep=5)
+            self.saver  = tf.train.Saver(tf.global_variables(), max_to_keep=2)
 
         with tf.name_scope('summary'):
             tf.summary.scalar("learn_rate",      self.learn_rate)
