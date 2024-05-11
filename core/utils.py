@@ -104,7 +104,7 @@ def draw_bbox(image, bboxes,  classes, show_label=True):
             cv2.rectangle(image, c1, (c1[0] + t_size[0], c1[1] - t_size[1] - 3), bbox_color, -1)  # filled
 
             cv2.putText(image, bbox_mess, (c1[0], c1[1]-2), cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale, (0, 0, 0), bbox_thick//2, lineType=cv2.LINE_AA)
+                        fontScale, (255, 255, 255), bbox_thick//2, lineType=cv2.LINE_AA)
 
     return image
 
