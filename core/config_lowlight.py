@@ -14,10 +14,10 @@ parser.add_argument('--gpu_id', dest='gpu_id', type=str, default='0', help='if u
 parser.add_argument('--ISP_FLAG', dest='ISP_FLAG', type=bool, default=True, help='whether use isp')
 parser.add_argument('--lowlight_FLAG', dest='lowlight_FLAG', type=bool, default=True, help='whether use Hybrid data training')
 parser.add_argument('--train_path', dest='train_path', nargs='*', default='./data/dataset_dark/voc_norm_train.txt', help='folder of the training data')
-parser.add_argument('--test_path', dest='test_path', nargs='*', default='./data/dataset_dark/sample.txt', help='folder of the training data')
+parser.add_argument('--test_path', dest='test_path', nargs='*', default='./data/dataset_dark/voc_norm_val.txt', help='folder of the training data')
 parser.add_argument('--class_name', dest='class_name', nargs='*', default='./data/classes/vocdark.names', help='folder of the training data')
 parser.add_argument('--WRITE_IMAGE_PATH', dest='WRITE_IMAGE_PATH', nargs='*', default='./experiments_lowlight/exp_58/detection_results/', help='folder of the training data')
-parser.add_argument('--WEIGHT_FILE', dest='WEIGHT_FILE', nargs='*', default='./experiments_lowlight/exp_58/checkpoint/yolov3_test_loss=1.4572.ckpt-20', help='folder of the training data')
+parser.add_argument('--WEIGHT_FILE', dest='WEIGHT_FILE', nargs='*', default='./experiments_lowlight/exp_58/checkpoint/yolov3_test_loss=1.8926.ckpt-80', help='folder of the training data')
 parser.add_argument('--pre_train', dest='pre_train', default='./experiments_lowlight/exp_58/checkpoint/yolov3_test_loss=1.4572.ckpt-20', help='the path of pretrained models if is not null. not used for now')
 # we trained our model from scratch.
 
@@ -124,7 +124,7 @@ __C.TEST.ANNOT_PATH             = args.test_path
 __C.TEST.BATCH_SIZE             = 6
 __C.TEST.INPUT_SIZE             = 544
 __C.TEST.DATA_AUG               = False
-__C.TEST.WRITE_IMAGE            = True
+__C.TEST.WRITE_IMAGE            = False
 __C.TEST.WRITE_IMAGE_PATH       = args.WRITE_IMAGE_PATH
 __C.TEST.WRITE_IMAGE_SHOW_LABEL = True
 __C.TEST.WEIGHT_FILE            = args.WEIGHT_FILE
