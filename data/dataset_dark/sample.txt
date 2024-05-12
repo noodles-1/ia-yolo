@@ -1,15 +1,2 @@
-../datasets/lptest/Car29-front-2_jpg.rf.cf684f8eefa1828d1d1d6779b02285a3.jpg 243,375,403,455,0
-../datasets/lptest/Car30-front-4_jpg.rf.ea310173cd84bed0977d8e4de1d2fa6b.jpg 1,1,1528,572,0
-../datasets/lptest/421598179_1042097110422917_2768044604072097484_n_jpg.rf.3875abd48bed20a859cfe74b9a7943ed.jpg 214,156,336,223,0
-../datasets/lptest/27_jpg.rf.aa25ef964807fb9e451b0faef929c5bc.jpg 236,108,467,303,0
-../datasets/lptest/Car42-front-1_jpg.rf.adefb614d7153bcac5a2aebf570270a6.jpg 290,314,345,343,0
-../datasets/lptest/Car39-back-2_jpg.rf.42e6170e3c91d55e6a948250904fa2e1.jpg 240,306,405,388,0
-../datasets/lptest/IMG_20231011_065504_jpg.rf.945a983a3cbbb640d35884131b81dff0.jpg 232,269,416,381,0
-../datasets/lptest/10_png.rf.16e3310561c6f4c606ae8304cc3c086e.jpg 3,3,641,637,0
-../datasets/lptest/Car30-back-2_jpg.rf.483d1b18f529f3a322ca0d93e9e36d6b.jpg 256,395,374,450,0
-../datasets/lptest/Car45-back-1_jpg.rf.2a11ede96df10b715e373de582b18db9.jpg 233,301,368,357,0
-../datasets/lptest/Car34-back-1_jpg.rf.d148eaf6d501fc6d93adaebc3695c86c.jpg 2,2,426,160,0
-../datasets/lptest/Car44-back-3_jpg.rf.0361a2d1049fe95f47bf8cb6cc642f73.jpg 1,1,1353,520,0
-../datasets/lptest/419464555_1021594402239625_894304545379493430_n_jpg.rf.bb592d90db5f2cc380d45489c507cd39.jpg 213,160,385,262,0
-../datasets/lptest/DSC_3724_JPG.rf.2812ad873dd8b27e5066c7f57ac91ec6.jpg 232,161,424,287,0
-../datasets/lptest/Car9-back-1_jpg.rf.f5b6529dffd0d67a1791ec930540448f.jpg 288,386,364,425,0
+test_images/5.jpg
+test_images/6.jpg
