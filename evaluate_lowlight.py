@@ -109,7 +109,7 @@ class YoloTest(object):
         # os.mkdir(ground_truth_dir_path)
         # os.mkdir(self.write_image_path)
 
-        time_total = 0
+        # time_total = 0
         image_name = image_path.split('/')[-1]
         image = cv2.imread(image_path)
 
@@ -133,9 +133,9 @@ class YoloTest(object):
         #         print('\t' + str(bbox_mess).strip())
         # print('=> predict result of %s:' % image_path)
         # predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
-        t1 = time.time()
+        # t1 = time.time()
         image_isped = self.predict(image)
-        time_total += time.time() - t1
+        # time_total += time.time() - t1
 
         if self.write_image:
             # image = utils.draw_bbox(image_isped, bboxes_pr, self.classes, show_label=self.show_label)

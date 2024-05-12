@@ -64,7 +64,7 @@ class YoloTest(object):
         self.saver = tf.train.Saver(ema_obj.variables_to_restore())
         self.saver.restore(self.sess, self.weight_file)
 
-    def predict(self, image, image_name):
+    def predict(self, image):
 
         org_image = np.copy(image)
         org_h, org_w, _ = org_image.shape
@@ -140,11 +140,11 @@ class YoloTest(object):
             time_one_img = time.time() - start_time
             print('process one image need:', time_one_img)
 
-        pred_bbox = np.concatenate([np.reshape(pred_sbbox, (-1, 5 + self.num_classes)),
-                                    np.reshape(pred_mbbox, (-1, 5 + self.num_classes)),
-                                    np.reshape(pred_lbbox, (-1, 5 + self.num_classes))], axis=0)
-        bboxes = utils.postprocess_boxes(pred_bbox, (org_h, org_w), self.input_size, self.score_threshold)
-        bboxes = utils.nms(bboxes, self.iou_threshold)
+        # pred_bbox = np.concatenate([np.reshape(pred_sbbox, (-1, 5 + self.num_classes)),
+        #                             np.reshape(pred_mbbox, (-1, 5 + self.num_classes)),
+        #                             np.reshape(pred_lbbox, (-1, 5 + self.num_classes))], axis=0)
+        # bboxes = utils.postprocess_boxes(pred_bbox, (org_h, org_w), self.input_size, self.score_threshold)
+        # bboxes = utils.nms(bboxes, self.iou_threshold)
         if self.isp_flag:
             print('ISP params :  ', isp_param)
             image_isped = utils.image_unpreporcess(image_isped[0, ...], [org_h, org_w])
@@ -161,90 +161,79 @@ class YoloTest(object):
             image_isped = np.clip(image, 0, 255)
             # image_isped = utils.image_unpreporcess(image_isped, [org_h, org_w])
             # cv2.imwrite(self.write_image_path + 'low'+ image_name, image_isped)
+        return image_isped
+
+    def evaluate(self, image_path):
+        '''
+        Several lines were commented out to disable bounding box prediction, and only utilize the
+        CNN-PP and DIP module of this system.
+        '''
+        # mAP_path = exp_folder + '/mAP'
+        # if not os.path.exists(mAP_path):
+        #     os.makedirs(mAP_path)
+
+        # predicted_dir_path = mAP_path + '/predicted'
+        # ground_truth_dir_path = mAP_path + '/ground-truth'
+
+        # if os.path.exists(predicted_dir_path): shutil.rmtree(predicted_dir_path)
+        # if os.path.exists(ground_truth_dir_path): shutil.rmtree(ground_truth_dir_path)
+        # if os.path.exists(self.write_image_path): shutil.rmtree(self.write_image_path)
+        # os.mkdir(predicted_dir_path)
+        # os.mkdir(ground_truth_dir_path)
+        # os.mkdir(self.write_image_path)
+        # time_total = 0
+        # time_total_cnn_process_img = 0
+        # num_img = 0
+
+        # if len(line.strip().split()[1:]) == 0:
+        #     continue
+        image_name = image_path.split('/')[-1]
+        image = cv2.imread(image_path)
+
+        # bbox_data_gt = np.array([list(map(int, box.split(','))) for box in annotation[1:]])
+
+        # if len(bbox_data_gt) == 0:
+        #     bboxes_gt=[]
+        #     classes_gt=[]
+        # else:
+        #     bboxes_gt, classes_gt = bbox_data_gt[:, :4], bbox_data_gt[:, 4]
+        # ground_truth_path = os.path.join(ground_truth_dir_path, str(num) + '.txt')
+
+        # print('=> ground truth of %s:' % image_name)
+        # num_bbox_gt = len(bboxes_gt)
+        # with open(ground_truth_path, 'w') as f:
+        #     for i in range(num_bbox_gt):
+        #         class_name = self.classes[classes_gt[i]]
+        #         xmin, ymin, xmax, ymax = list(map(str, bboxes_gt[i]))
+        #         bbox_mess = ' '.join([class_name, xmin, ymin, xmax, ymax]) + '\n'
+        #         f.write(bbox_mess)
+        #         print('\t' + str(bbox_mess).strip())
+        # print('=> predict result of %s:' % image_name)
+        # predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
+        # t1 = time.time()
+        image_isped = self.predict(image)
+        # num_img += 1
+        # time_total_cnn_process_img += time_one_img
+        # time_total += time.time() - t1
+
+        if self.write_image:
+            # image = utils.draw_bbox(image_isped, bboxes_pr, self.classes, show_label=self.show_label)
+            cv2.imwrite(self.write_image_path+image_name, image_isped)
+
+        # with open(predict_result_path, 'w') as f:
+        #     for bbox in bboxes_pr:
+        #         coor = np.array(bbox[:4], dtype=np.int32)
+        #         score = bbox[4]
+        #         class_ind = int(bbox[5])
+        #         class_name = self.classes[class_ind]
+
+        #         score = '%.4f' % score
+        #         xmin, ymin, xmax, ymax = list(map(str, coor))
+        #         bbox_mess = ' '.join([class_name, score, xmin, ymin, xmax, ymax]) + '\n'
+        #         f.write(bbox_mess)
+        #         print('\t' + str(bbox_mess).strip())
+        # print('****process uses:', time_total)
+        # print('validation time:%s, total_proce_time:%s, num_img:%s, aver_time:%s'%(time_total, time_total_cnn_process_img, num_img, time_total_cnn_process_img / num_img))
 
 
-
-
-        return bboxes, image_isped, time_one_img
-
-
-    def evaluate(self):
-        mAP_path = exp_folder + '/mAP'
-        if not os.path.exists(mAP_path):
-            os.makedirs(mAP_path)
-
-        predicted_dir_path = mAP_path + '/predicted'
-        ground_truth_dir_path = mAP_path + '/ground-truth'
-
-        if os.path.exists(predicted_dir_path): shutil.rmtree(predicted_dir_path)
-        if os.path.exists(ground_truth_dir_path): shutil.rmtree(ground_truth_dir_path)
-        if os.path.exists(self.write_image_path): shutil.rmtree(self.write_image_path)
-        os.mkdir(predicted_dir_path)
-        os.mkdir(ground_truth_dir_path)
-        os.mkdir(self.write_image_path)
-        time_total = 0
-        time_total_cnn_process_img = 0
-        num_img = 0
-
-        with open(self.annotation_path, 'r') as annotation_file:
-            for num, line in enumerate(annotation_file):
-                # if len(line.strip().split()[1:]) == 0:
-                #     continue
-                annotation = line.strip().split()
-                image_path = annotation[0]
-                image_name = image_path.split('/')[-1]
-                image = cv2.imread(image_path)
-
-                bbox_data_gt = np.array([list(map(int, box.split(','))) for box in annotation[1:]])
-
-                if len(bbox_data_gt) == 0:
-                    bboxes_gt=[]
-                    classes_gt=[]
-                else:
-                    bboxes_gt, classes_gt = bbox_data_gt[:, :4], bbox_data_gt[:, 4]
-                ground_truth_path = os.path.join(ground_truth_dir_path, str(num) + '.txt')
-
-                print('=> ground truth of %s:' % image_name)
-                num_bbox_gt = len(bboxes_gt)
-                with open(ground_truth_path, 'w') as f:
-                    for i in range(num_bbox_gt):
-                        class_name = self.classes[classes_gt[i]]
-                        xmin, ymin, xmax, ymax = list(map(str, bboxes_gt[i]))
-                        bbox_mess = ' '.join([class_name, xmin, ymin, xmax, ymax]) + '\n'
-                        f.write(bbox_mess)
-                        print('\t' + str(bbox_mess).strip())
-                print('=> predict result of %s:' % image_name)
-                predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
-                t1 = time.time()
-                bboxes_pr, image_isped, time_one_img = self.predict(image, image_name)
-                num_img += 1
-                time_total_cnn_process_img += time_one_img
-                time_total += time.time() - t1
-
-                if self.write_image:
-                    if self.isp_flag:
-                        image = utils.draw_bbox(image_isped, bboxes_pr, self.classes, show_label=self.show_label)
-                    else:
-                        image = utils.draw_bbox(image_isped, bboxes_pr, self.classes, show_label=self.show_label)
-                    cv2.imwrite(self.write_image_path+image_name, image)
-
-                with open(predict_result_path, 'w') as f:
-                    for bbox in bboxes_pr:
-                        coor = np.array(bbox[:4], dtype=np.int32)
-                        score = bbox[4]
-                        class_ind = int(bbox[5])
-                        class_name = self.classes[class_ind]
-
-                        score = '%.4f' % score
-                        xmin, ymin, xmax, ymax = list(map(str, coor))
-                        bbox_mess = ' '.join([class_name, score, xmin, ymin, xmax, ymax]) + '\n'
-                        f.write(bbox_mess)
-                        print('\t' + str(bbox_mess).strip())
-        print('****process uses:', time_total)
-        print('validation time:%s, total_proce_time:%s, num_img:%s, aver_time:%s'%(time_total, time_total_cnn_process_img, num_img, time_total_cnn_process_img / num_img))
-
-
-if __name__ == '__main__': YoloTest().evaluate()
-
-
-
+if __name__ == '__main__': YoloTest().evaluate('test_images/9.jpg')
