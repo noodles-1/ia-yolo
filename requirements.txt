@@ -1,9 +1,10 @@
 easydict==1.13
-matplotlib
-numba
+matplotlib==3.4.0
+numba==0.58.0
 numpy==1.21.5
+nvidia_tensorflow==1.15.5+nv22.11
 opencv_python==4.9.0.80
 Pillow==10.3.0
-scikit-image
-tifffile
+skimage==0.0
+tifffile==2023.7.10
 tqdm==4.66.4
