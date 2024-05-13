@@ -8,7 +8,7 @@ import argparse
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--exp_num', dest='exp_num', type=str, default='101', help='current experiment number')
 parser.add_argument('--epoch_first_stage', dest='epoch_first_stage', type=int, default=0, help='# of epochs')
-parser.add_argument('--epoch_second_stage', dest='epoch_second_stage', type=int, default=20, help='# of epochs')
+parser.add_argument('--epoch_second_stage', dest='epoch_second_stage', type=int, default=80, help='# of epochs')
 parser.add_argument('--use_gpu', dest='use_gpu', type=int, default=1, help='gpu flag, 1 for GPU and 0 for CPU')
 parser.add_argument('--checkpoint_dir', dest='ckpt_dir', default='checkpoint', help='models are saved here')
 parser.add_argument('--exp_dir', dest='exp_dir', default='./experiments', help='models are saved here')
@@ -24,8 +24,8 @@ parser.add_argument('--val_path', dest='val_path', nargs='*', default='./data/da
 parser.add_argument('--test_path', dest='test_path', nargs='*', default='./data/dataset_fog/voc_norm_test.txt', help='folder of the training data')
 parser.add_argument('--class_name', dest='class_name', nargs='*', default='./data/classes/vocfog.names', help='folder of the training data')
 parser.add_argument('--WRITE_IMAGE_PATH', dest='WRITE_IMAGE_PATH', nargs='*', default='./experiments/exp_101/detection_results/', help='folder of the training data')
-parser.add_argument('--WEIGHT_FILE', dest='WEIGHT_FILE', nargs='*', default='./experiments/exp_101/checkpoint/yolov3_test_loss=74.0619.ckpt-20', help='folder of the training data')
-parser.add_argument('--pre_train', dest='pre_train', default='./experiments/exp_101/checkpoint/yolov3_test_loss=nan.ckpt-2', help='the path of pretrained models if is not null. not used for now')
+parser.add_argument('--WEIGHT_FILE', dest='WEIGHT_FILE', nargs='*', default='./experiments/exp_101/checkpoint/yolov3_test_loss=108.1016.ckpt-80', help='folder of the training data')
+parser.add_argument('--pre_train', dest='pre_train', default='./experiments/exp_101/checkpoint/yolov3_test_loss=74.0619.ckpt-20', help='the path of pretrained models if is not null. not used for now')
 # we trained our model from scratch.
 
 
