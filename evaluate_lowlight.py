@@ -91,7 +91,7 @@ class YoloTest(object):
         return image_isped
 
 
-    def evaluate(self, image_path):
+    def evaluate(self, image):
         '''
         Several lines were commented out to disable bounding box prediction, and only utilize the
         CNN-PP and DIP module of this system.
@@ -110,8 +110,8 @@ class YoloTest(object):
         # os.mkdir(self.write_image_path)
 
         # time_total = 0
-        image_name = image_path.split('/')[-1]
-        image = cv2.imread(image_path)
+        # image_name = image_path.split('/')[-1]
+        # image = cv2.imread(image_path)
 
         # bbox_data_gt = np.array([list(map(int, box.split(','))) for box in annotation[1:]])
 
@@ -135,11 +135,12 @@ class YoloTest(object):
         # predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
         # t1 = time.time()
         image_isped = self.predict(image)
+        return image_isped
         # time_total += time.time() - t1
 
-        if self.write_image:
+        # if self.write_image:
             # image = utils.draw_bbox(image_isped, bboxes_pr, self.classes, show_label=self.show_label)
-            cv2.imwrite(self.write_image_path+image_name, image_isped)
+            # cv2.imwrite(self.write_image_path+image_name, image_isped)
 
         # with open(predict_result_path, 'w') as f:
         #     for bbox in bboxes_pr:
@@ -152,5 +153,3 @@ class YoloTest(object):
         #         bbox_mess = ' '.join([class_name, score, xmin, ymin, xmax, ymax]) + '\n'
         #         f.write(bbox_mess)
         #         print('\t' + str(bbox_mess).strip())
-
-if __name__ == '__main__': YoloTest().evaluate('test_images/8.jpg')
