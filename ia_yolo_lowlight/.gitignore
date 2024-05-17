@@ -1,0 +1,13 @@
+**/__pycache__
+**/tempCodeRunnerFile.py
+
+experiments
+experiments_lowlight
+results
+test_images
+docs
+data/foggyimages
+
+tempCodeRunnerFile.py
+test.py
+test_run.py
