@@ -93,7 +93,6 @@ def get_image_center(image):
     image = image[:, start:start + image.shape[0]]
   return image
 
-
 def rotate_image(image, angle):
   """
     Rotates an OpenCV 2 / NumPy image about it's centre by the given angle

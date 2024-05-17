@@ -5,15 +5,13 @@
 import numpy as np
 import tensorflow as tf
 import core.utils as utils
-import core.common as common
-import core.backbone as backbone
-from core.config_lowlight import cfg
 
+from core.config_lowlight import cfg
+from core.common import Common
+from core.backbone import Backbone
 
 class YOLOV3(object):
-    """Implement tensoflow yolov3 here"""
     def __init__(self, input_data, trainable, input_data_clean):
-
         self.trainable        = trainable
         self.classes          = utils.read_class_names(cfg.YOLO.CLASSES)
         self.num_class        = len(self.classes)
@@ -22,11 +20,12 @@ class YOLOV3(object):
         self.anchor_per_scale = cfg.YOLO.ANCHOR_PER_SCALE
         self.iou_loss_thresh  = cfg.YOLO.IOU_LOSS_THRESH
         self.upsample_method  = cfg.YOLO.UPSAMPLE_METHOD
-        self.isp_flag = cfg.YOLO.ISP_FLAG
-
+        self.isp_flag         = cfg.YOLO.ISP_FLAG
+        self.common           = Common()
+        self.backbone         = Backbone()
 
         try:
-            self.conv_lbbox, self.conv_mbbox, self.conv_sbbox, self.recovery_loss= self.__build_nework(input_data, self.isp_flag, input_data_clean)
+            self.conv_lbbox, self.conv_mbbox, self.conv_sbbox, self.recovery_loss = self.__build_nework(input_data, self.isp_flag, input_data_clean)
         except:
             raise NotImplementedError("Can not build up yolov3 network!")
 
@@ -40,15 +39,14 @@ class YOLOV3(object):
             self.pred_lbbox = self.decode(self.conv_lbbox, self.anchors[2], self.strides[2])
 
     def __build_nework(self, input_data, isp_flag, input_data_clean):
-
         filtered_image_batch = input_data
         self.filter_params = input_data
         filter_imgs_series = []
 
         if isp_flag:
-            with tf.variable_scope('extract_parameters_2'):
+            with tf.variable_scope('extract_parameters_2', reuse=tf.AUTO_REUSE):
                 input_data = tf.image.resize_images(input_data, [256, 256], method=tf.image.ResizeMethod.BILINEAR)
-                filter_features = common.extract_parameters_2(input_data, cfg, self.trainable)
+                filter_features = self.common.extract_parameters_2(input_data, cfg, self.trainable)
 
             # filter_features = tf.random_normal([1, 10], 0.5, 0.1)
 
@@ -75,48 +73,48 @@ class YOLOV3(object):
         recovery_loss = tf.reduce_sum(tf.pow(filtered_image_batch - input_data_clean, 2.0))#/(2.0 * batch_size)
 
         input_data = filtered_image_batch
-        route_1, route_2, input_data = backbone.darknet53(input_data, self.trainable)
+        route_1, route_2, input_data = self.backbone.darknet53(input_data, self.trainable)
 
-        input_data = common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv52')
-        input_data = common.convolutional(input_data, (3, 3,  512, 1024), self.trainable, 'conv53')
-        input_data = common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv54')
-        input_data = common.convolutional(input_data, (3, 3,  512, 1024), self.trainable, 'conv55')
-        input_data = common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv56')
+        input_data = self.common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv52')
+        input_data = self.common.convolutional(input_data, (3, 3,  512, 1024), self.trainable, 'conv53')
+        input_data = self.common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv54')
+        input_data = self.common.convolutional(input_data, (3, 3,  512, 1024), self.trainable, 'conv55')
+        input_data = self.common.convolutional(input_data, (1, 1, 1024,  512), self.trainable, 'conv56')
 
-        conv_lobj_branch = common.convolutional(input_data, (3, 3, 512, 1024), self.trainable, name='conv_lobj_branch')
-        conv_lbbox = common.convolutional(conv_lobj_branch, (1, 1, 1024, 3*(self.num_class + 5)),
+        conv_lobj_branch = self.common.convolutional(input_data, (3, 3, 512, 1024), self.trainable, name='conv_lobj_branch')
+        conv_lbbox = self.common.convolutional(conv_lobj_branch, (1, 1, 1024, 3*(self.num_class + 5)),
                                           trainable=self.trainable, name='conv_lbbox', activate=False, bn=False)
 
-        input_data = common.convolutional(input_data, (1, 1,  512,  256), self.trainable, 'conv57')
-        input_data = common.upsample(input_data, name='upsample0', method=self.upsample_method)
+        input_data = self.common.convolutional(input_data, (1, 1,  512,  256), self.trainable, 'conv57')
+        input_data = self.common.upsample(input_data, name='upsample0', method=self.upsample_method)
 
         with tf.variable_scope('route_1'):
             input_data = tf.concat([input_data, route_2], axis=-1)
 
-        input_data = common.convolutional(input_data, (1, 1, 768, 256), self.trainable, 'conv58')
-        input_data = common.convolutional(input_data, (3, 3, 256, 512), self.trainable, 'conv59')
-        input_data = common.convolutional(input_data, (1, 1, 512, 256), self.trainable, 'conv60')
-        input_data = common.convolutional(input_data, (3, 3, 256, 512), self.trainable, 'conv61')
-        input_data = common.convolutional(input_data, (1, 1, 512, 256), self.trainable, 'conv62')
+        input_data = self.common.convolutional(input_data, (1, 1, 768, 256), self.trainable, 'conv58')
+        input_data = self.common.convolutional(input_data, (3, 3, 256, 512), self.trainable, 'conv59')
+        input_data = self.common.convolutional(input_data, (1, 1, 512, 256), self.trainable, 'conv60')
+        input_data = self.common.convolutional(input_data, (3, 3, 256, 512), self.trainable, 'conv61')
+        input_data = self.common.convolutional(input_data, (1, 1, 512, 256), self.trainable, 'conv62')
 
-        conv_mobj_branch = common.convolutional(input_data, (3, 3, 256, 512),  self.trainable, name='conv_mobj_branch' )
-        conv_mbbox = common.convolutional(conv_mobj_branch, (1, 1, 512, 3*(self.num_class + 5)),
+        conv_mobj_branch = self.common.convolutional(input_data, (3, 3, 256, 512),  self.trainable, name='conv_mobj_branch' )
+        conv_mbbox = self.common.convolutional(conv_mobj_branch, (1, 1, 512, 3*(self.num_class + 5)),
                                           trainable=self.trainable, name='conv_mbbox', activate=False, bn=False)
 
-        input_data = common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv63')
-        input_data = common.upsample(input_data, name='upsample1', method=self.upsample_method)
+        input_data = self.common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv63')
+        input_data = self.common.upsample(input_data, name='upsample1', method=self.upsample_method)
 
         with tf.variable_scope('route_2'):
             input_data = tf.concat([input_data, route_1], axis=-1)
 
-        input_data = common.convolutional(input_data, (1, 1, 384, 128), self.trainable, 'conv64')
-        input_data = common.convolutional(input_data, (3, 3, 128, 256), self.trainable, 'conv65')
-        input_data = common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv66')
-        input_data = common.convolutional(input_data, (3, 3, 128, 256), self.trainable, 'conv67')
-        input_data = common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv68')
+        input_data = self.common.convolutional(input_data, (1, 1, 384, 128), self.trainable, 'conv64')
+        input_data = self.common.convolutional(input_data, (3, 3, 128, 256), self.trainable, 'conv65')
+        input_data = self.common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv66')
+        input_data = self.common.convolutional(input_data, (3, 3, 128, 256), self.trainable, 'conv67')
+        input_data = self.common.convolutional(input_data, (1, 1, 256, 128), self.trainable, 'conv68')
 
-        conv_sobj_branch = common.convolutional(input_data, (3, 3, 128, 256), self.trainable, name='conv_sobj_branch')
-        conv_sbbox = common.convolutional(conv_sobj_branch, (1, 1, 256, 3*(self.num_class + 5)),
+        conv_sobj_branch = self.common.convolutional(input_data, (3, 3, 128, 256), self.trainable, name='conv_sobj_branch')
+        conv_sbbox = self.common.convolutional(conv_sobj_branch, (1, 1, 256, 3*(self.num_class + 5)),
                                           trainable=self.trainable, name='conv_sbbox', activate=False, bn=False)
 
         return conv_lbbox, conv_mbbox, conv_sbbox, recovery_loss
@@ -126,7 +124,6 @@ class YOLOV3(object):
         return tensor of shape [batch_size, output_size, output_size, anchor_per_scale, 5 + num_classes]
                contains (x, y, w, h, score, probability)
         """
-
         conv_shape       = tf.shape(conv_output)
         batch_size       = conv_shape[0]
         output_size      = conv_shape[1]
@@ -160,7 +157,6 @@ class YOLOV3(object):
         return focal_loss
 
     def bbox_giou(self, boxes1, boxes2):
-
         boxes1 = tf.concat([boxes1[..., :2] - boxes1[..., 2:] * 0.5,
                             boxes1[..., :2] + boxes1[..., 2:] * 0.5], axis=-1)
         boxes2 = tf.concat([boxes2[..., :2] - boxes2[..., 2:] * 0.5,
@@ -191,7 +187,6 @@ class YOLOV3(object):
         return giou
 
     def bbox_iou(self, boxes1, boxes2):
-
         boxes1_area = boxes1[..., 2] * boxes1[..., 3]
         boxes2_area = boxes2[..., 2] * boxes2[..., 3]
 
@@ -211,7 +206,6 @@ class YOLOV3(object):
         return iou
 
     def loss_layer(self, conv, pred, label, bboxes, anchors, stride):
-
         conv_shape  = tf.shape(conv)
         batch_size  = conv_shape[0]
         output_size = conv_shape[1]
@@ -255,10 +249,7 @@ class YOLOV3(object):
 
         return giou_loss, conf_loss, prob_loss
 
-
-
     def compute_loss(self, label_sbbox, label_mbbox, label_lbbox, true_sbbox, true_mbbox, true_lbbox):
-
         with tf.name_scope('smaller_box_loss'):
             loss_sbbox = self.loss_layer(self.conv_sbbox, self.pred_sbbox, label_sbbox, true_sbbox,
                                          anchors = self.anchors[0], stride = self.strides[0])
@@ -283,5 +274,3 @@ class YOLOV3(object):
             recovery_loss = self.recovery_loss
 
         return giou_loss, conf_loss, prob_loss, recovery_loss
-
-

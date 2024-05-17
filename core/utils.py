@@ -16,7 +16,6 @@ def read_class_names(class_file_name):
             names[ID] = name.strip('\n')
     return names
 
-
 def get_anchors(anchors_path):
     '''loads the anchors from a file'''
     with open(anchors_path) as f:
@@ -25,7 +24,6 @@ def get_anchors(anchors_path):
     return anchors.reshape(3, 3, 2)
 
 def image_preporcess(image, target_size, gt_boxes=None):
-
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
 
     ih, iw    = target_size
@@ -49,7 +47,6 @@ def image_preporcess(image, target_size, gt_boxes=None):
         return image_paded, gt_boxes
 
 def image_unpreporcess(image, target_size, gt_boxes=None):
-
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR).astype(np.float32)
 
     ih, iw = target_size
@@ -108,10 +105,7 @@ def draw_bbox(image, bboxes,  classes, show_label=True):
 
     return image
 
-
-
 def bboxes_iou(boxes1, boxes2):
-
     boxes1 = np.array(boxes1)
     boxes2 = np.array(boxes2)
 
@@ -127,8 +121,6 @@ def bboxes_iou(boxes1, boxes2):
     ious          = np.maximum(1.0 * inter_area / union_area, np.finfo(np.float32).eps)
 
     return ious
-
-
 
 def read_pb_return_tensors(graph, pb_file, return_elements):
 
@@ -179,9 +171,7 @@ def nms(bboxes, iou_threshold, sigma=0.3, method='nms'):
 
     return best_bboxes
 
-
 def postprocess_boxes(pred_bbox, org_img_shape, input_size, score_threshold):
-
     valid_scale=[0, np.inf]
     pred_bbox = np.array(pred_bbox)
 
@@ -220,7 +210,6 @@ def postprocess_boxes(pred_bbox, org_img_shape, input_size, score_threshold):
     coors, scores, classes = pred_coor[mask], scores[mask], classes[mask]
 
     return np.concatenate([coors, scores[:, np.newaxis], classes[:, np.newaxis]], axis=-1)
-
 
 def write_mes(msg, log_name=None, show=True, mode='a'):
     get_end = lambda line: '' if line.endswith('\n') else '\n'
