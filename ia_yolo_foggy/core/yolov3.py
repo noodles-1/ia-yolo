@@ -46,9 +46,9 @@ class YOLOV3(object):
         if isp_flag:
             # start_time = time.time()
 
-            with tf.variable_scope('extract_parameters', reuse=tf.AUTO_REUSE):
+            with tf.variable_scope('extract_parameters_2', reuse=tf.AUTO_REUSE):
                 input_data = tf.image.resize_images(input_data, [256, 256], method=tf.image.ResizeMethod.BILINEAR)
-                filter_features = self.common.extract_parameters(input_data, cfg, self.trainable)
+                filter_features = self.common.extract_parameters_2(input_data, cfg, self.trainable)
 
             # filter_features = tf.random_normal([1, 15], 0.5, 0.1)
             filters = cfg.filters
