@@ -41,10 +41,10 @@ def convert_voc_annotation(data_path, anno_path, use_difficult_bbox=False):
 if __name__ == '__main__':
     # for foggy conditions
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", default="../datasets")
-    parser.add_argument("--train_annotation", default="data/dataset_dark/voc_norm_train.txt")
-    parser.add_argument("--test_annotation",  default="data/dataset_dark/voc_norm_test.txt")
-    parser.add_argument("--val_annotation",  default="data/dataset_dark/voc_norm_val.txt")
+    parser.add_argument("--data_path", default="../../datasets")
+    parser.add_argument("--train_annotation", default="data/dataset_fog/voc_norm_train.txt")
+    parser.add_argument("--test_annotation",  default="data/dataset_fog/voc_norm_test.txt")
+    parser.add_argument("--val_annotation",  default="data/dataset_fog/voc_norm_val.txt")
 
     flags = parser.parse_args()
 

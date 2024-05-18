@@ -15,9 +15,9 @@ parser.add_argument('--exp_dir', dest='exp_dir', default='./experiments', help='
 parser.add_argument('--gpu_id', dest='gpu_id', type=str, default='0', help='if use gpu, use gpu device id')
 parser.add_argument('--ISP_FLAG', dest='ISP_FLAG', type=bool, default=True, help='whether use DIP Module')
 parser.add_argument('--fog_FLAG', dest='fog_FLAG', type=bool, default=True, help='whether use Hybrid data training')
-parser.add_argument('--vocfog_traindata_dir', dest='vocfog_traindata_dir', default='../datasets/voctrain/JPEGImages/',
+parser.add_argument('--vocfog_traindata_dir', dest='vocfog_traindata_dir', default='../../datasets/lptrain/JPEGImages/',
                     help='the dir contains ten levels synthetic foggy images')
-parser.add_argument('--vocfog_valdata_dir', dest='vocfog_valdata_dir', default='../datasets/vocval/JPEGImages/',
+parser.add_argument('--vocfog_valdata_dir', dest='vocfog_valdata_dir', default='../../datasets/lpval/JPEGImages/',
                     help='the dir contains ten levels synthetic foggy images')
 parser.add_argument('--train_path', dest='train_path', nargs='*', default='./data/dataset_fog/voc_norm_train.txt', help='folder of the training data')
 parser.add_argument('--val_path', dest='val_path', nargs='*', default='./data/dataset_fog/voc_norm_val.txt', help='folder of the training data')

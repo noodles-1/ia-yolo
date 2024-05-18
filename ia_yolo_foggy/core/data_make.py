@@ -26,7 +26,7 @@ def parse_annotation(annotation):
     # print(image_path)
     img_name = image_path.split('/')[-1]
     # print(img_name)
-    image_name, image_name_index = img_name.split('.')
+    image_name, image_name_index = img_name[:len(img_name)-4], img_name[len(img_name)-3:]
     # print(image_name)
     # print(image_name_index)
 
@@ -59,7 +59,7 @@ def parse_annotation(annotation):
         foggy_image = AddHaz_loop(img_f, center, size, beta, A)
         img_f = np.clip(foggy_image*255, 0, 255)
         img_f = img_f.astype(np.uint8)
-        img_name = '../datasets/vocval/JPEGImages/' + image_name + '_' + ("%.2f"%beta) + '.' + image_name_index
+        img_name = '../../datasets/lpval/' + image_name + '_' + ("%.2f"%beta) + '.' + image_name_index
         #img_name = '../datasets/VOC/val/' + image_name + '_' + ("%.2f"%beta) + '.' + image_name_index
         cv2.imwrite(img_name, img_f)
 
