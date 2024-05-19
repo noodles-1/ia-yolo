@@ -34,7 +34,6 @@ def main():
         conn, addr = server_socket.accept()
         print(f'Connected by {addr}')
 
-        # Receive image from client
         image = receive_image(conn)
         if image is not None:
             lowlight_image_filtered = lowlight_model.evaluate(image)

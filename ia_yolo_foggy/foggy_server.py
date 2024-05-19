@@ -34,7 +34,6 @@ def main():
         conn, addr = server_socket.accept()
         print(f'Connected by {addr}')
 
-        # Receive image from client
         image = receive_image(conn)
         if image is not None:
             foggy_image_filtered = foggy_model.evaluate(image)

@@ -166,9 +166,7 @@ class Dataset(object):
 
         img_name = image_path.split('/')[-1]
         # print(img_name)
-        image_name = img_name.split('.')[0]
-        # print(image_name)
-        image_name_index = img_name.split('.')[1]
+        image_name, image_name_index = img_name[:len(img_name)-4], img_name[len(img_name)-3:]
 
         # image = np.array(cv2.imread(image_path))
 
